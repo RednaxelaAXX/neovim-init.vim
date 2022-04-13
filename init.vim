@@ -51,6 +51,8 @@ Plug 'dkarter/bullets.vim'
 Plug 'psliwka/vim-smoothie'
 Plug 'antoinemadec/FixCursorHold.nvim'
 Plug 'wellle/context.vim'
+Plug 'rust-lang/rust.vim'
+" Plug 'honza/vim-snippets'
 
 " Entertainment
 Plug 'dansomething/vim-hackernews'
@@ -363,3 +365,16 @@ autocmd FileType python nmap <leader>x :0,$!~/.config/nvim/env/bin/python -m yap
 nmap <silent> <leader><leader> :noh<CR>
 nmap <Tab> :bnext<CR>
 nmap <S-Tab> :bprevious<CR>
+
+" autofmt when save rust files
+let g:rustfmt_autosave = 1
+
+" 手动调用格式化， Visual 模式下局部格式化，Normal 模式下当前文件内容格式化
+" 有时候代码有错误时，rust.vim 不会调用格式化，手动格式化就很方便
+vnoremap <leader>ft :RustFmtRange<CR>
+nnoremap <leader>ft :RustFmt<CR>
+" 设置编译运行 (来自 rust.vim，加命令行参数则使用命令 `:RustRun!`)
+nnoremap <M-r> :RustRun<CR>
+" 使用 `:verbose nmap <M-t>` 检测 Alt-t是否被占用
+" 使用 `:verbose nmap` 则显示所有快捷键绑定信息
+nnoremap <M-t> :RustTest<CR>
