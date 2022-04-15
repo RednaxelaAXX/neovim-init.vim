@@ -73,6 +73,7 @@ set textwidth=0
 set hidden
 set number
 set title
+set scrolloff=7
 
 """ Coloring
 
@@ -108,6 +109,10 @@ set termguicolors
 let NERDTreeShowHidden=1
 " Exit Vim if NERDTree is the only window left.
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
+" If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
+autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
+    \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
 
 " Airline
 let g:airline_powerline_fonts = 1
@@ -337,6 +342,7 @@ let mapleader=","
 nmap <leader>$s <C-w>s<C-w>j:terminal<CR>:set nonumber<CR><S-a>
 nmap <leader>$v <C-w>v<C-w>l:terminal<CR>:set nonumber<CR><S-a>
 nmap <leader>q :NERDTreeToggle<CR>
+nmap <leader>v :NERDTreeFind<CR>
 nmap \\ <leader>q
 nmap <leader>w :TagbarToggle<CR>
 nmap \| <leader>w
@@ -366,6 +372,11 @@ nmap <silent> <leader><leader> :noh<CR>
 nmap <Tab> :bnext<CR>
 nmap <S-Tab> :bprevious<CR>
 
+" split settings
+nmap sl :set splitright<CR>:vsplit<CR>
+nmap sj :set splitbelow<CR>:split<CR>
+nmap si :set splitbelow<CR>:split ~/
+
 " autofmt when save rust files
 let g:rustfmt_autosave = 1
 
@@ -378,3 +389,8 @@ nnoremap <M-r> :RustRun<CR>
 " 使用 `:verbose nmap <M-t>` 检测 Alt-t是否被占用
 " 使用 `:verbose nmap` 则显示所有快捷键绑定信息
 nnoremap <M-t> :RustTest<CR>
+" disable all default vCoolor mappings
+let g:vcoolor_disable_mappings = 1
+
+" The cursor can be displayed at the last edited position when you open the file again
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
